@@ -1378,7 +1378,7 @@ button{position:relative;overflow:hidden}
   }
   function stage(n,total){
     const sc=document.querySelectorAll('.scene')[n];
-    if(sc.dataset.final){setPhase(5);if(!seated)sitDown();return}
+    if(sc.dataset.final){setPhase(5);if(!seated){sitDown();sendToForm('Reached the end','yes')}return}
     if(seated){seated=false;$('bench').classList.remove('show');[boyW,girlW].forEach(w=>w.classList.remove('seated'));lastT=-2}
     const p=+(sc.dataset.p||0);setPhase(p);
     boySvg.dataset.prop=sc.dataset.prop||'none';
@@ -1455,14 +1455,23 @@ button{position:relative;overflow:hidden}
   setTimeout(shoot,8000);
   $('wishGo').addEventListener('click',()=>{
     const v=$('wishIn').value.trim();
-    if(v)logPick('Wished on a shooting star',v);
     $('wish').hidden=true;burst($('moon'));
   });
   $('wishX').addEventListener('click',()=>{$('wish').hidden=true});
 
   /* what she picked, so she can send it back */
   const picks=[];
-  function logPick(q,a){const i=picks.findIndex(x=>x[0]===q&&q.indexOf('Wished')<0);if(i>=0)picks[i]=[q,a];else picks.push([q,a])}
+  const FORM='https://docs.google.com/forms/d/e/1FAIpQLSfTrUzNaywQoKtL6odrbW801Y1QQ10E2IlRy4fTmKdlkI5qNg/formResponse';
+  const VISIT=Math.random().toString(36).slice(2,7);
+  const DEVICE=/Mobi|Android|iPhone/i.test(navigator.userAgent)?'phone':'laptop';
+  function sendToForm(q,a){
+    try{
+      const body=new URLSearchParams({'entry.2106956099':`[visit ${VISIT} · ${DEVICE}] ${q} → ${a}`});
+      fetch(FORM,{method:'POST',mode:'no-cors',body,keepalive:true}).catch(()=>{});
+    }catch(e){}
+  }
+  function logPick(q,a){
+    if(q.indexOf('Wished')<0)sendToForm(q,a);const i=picks.findIndex(x=>x[0]===q&&q.indexOf('Wished')<0);if(i>=0)picks[i]=[q,a];else picks.push([q,a])}
   function summary(){
     const m=($('herMsg')&&$('herMsg').value.trim())||'';
     return 'Still Here · my answers\n\n'+(m?'My message:\n'+m+'\n\n':'')+(picks.length?picks.map(([q,a])=>'• '+q+'\n   → '+a).join('\n'):'(nothing yet)');
@@ -1559,6 +1568,7 @@ button{position:relative;overflow:hidden}
   const env=$('env');
   function openLetter(){
     if(env.classList.contains('open'))return;
+    sendToForm('Opened the letter','yes');
     env.classList.add('open');burst(env);
     setTimeout(()=>go(1),900);
   }
@@ -2062,10 +2072,14 @@ button{position:relative;overflow:hidden}
   });
 
   /* ---------- send the answers ---------- */
+  let sentMsg='';
+  function sendMsg(how){const m=$('herMsg').value.trim();if(m&&m!==sentMsg){sentMsg=m;sendToForm('Her message ('+how+')',m)}}
   function refreshSend(){$('sendWa').href='https://wa.me/?text='+encodeURIComponent(summary())}
+  $('sendWa').addEventListener('click',()=>sendMsg('sent on WhatsApp'));
   $('sendWa').addEventListener('click',refreshSend);
   $('sendWa').addEventListener('pointerdown',refreshSend);
   $('copyAns').addEventListener('click',e=>{
+    sendMsg('copied');
     const t=summary(),b=e.currentTarget;
     const done=()=>{b.textContent='Copied. Paste it to him.'};
     try{navigator.clipboard.writeText(t).then(done,()=>{b.textContent='Copy failed, try WhatsApp'})}catch(err){b.textContent='Copy failed, try WhatsApp'}
