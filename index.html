@@ -699,6 +699,34 @@ button{position:relative;overflow:hidden}
 .final-msg textarea:focus{border-color:var(--rose)}
 .signoff{font-family:var(--f-hand);font-size:24px;color:var(--rose-deep);line-height:1.2}
 
+/* ---------- progress bar (fits any phone) ---------- */
+.dots{left:24px;right:24px;transform:none;bottom:22px;height:5px;border-radius:5px;background:var(--line);gap:0;display:block}
+.dots .pfill{position:absolute;left:0;top:0;bottom:0;width:var(--prog,0%);border-radius:5px;background:var(--rose);transition:width .8s ease}
+.dots .pheart{position:absolute;top:50%;left:var(--prog,0%);width:16px;height:16px;transform:translate(-50%,-50%);transition:left .8s ease}
+.dots .pheart path{fill:var(--rose)}
+/* ---------- calmer cat walk ---------- */
+.cat.flip svg{transform:none}
+.cat.flip{scale:-1 1}
+.cat.walking svg{animation:catbob .6s ease-in-out infinite}
+@keyframes catbob{50%{translate:0 -2px}}
+.cat .cl{transform-box:fill-box;transform-origin:50% 0}
+.cat.walking .cl1,.cat.walking .cl3{animation:catleg .6s ease-in-out infinite}
+.cat.walking .cl2,.cat.walking .cl4{animation:catleg .6s ease-in-out infinite reverse}
+@keyframes catleg{0%,100%{rotate:-14deg}50%{rotate:14deg}}
+.cat .zzz{scale:1 1}
+.cat.flip .zzz{scale:-1 1}
+
+html,body{overflow-x:hidden}
+.stage{overflow-x:clip}
+.card{box-sizing:border-box}
+@media (max-width:420px){
+  .card{transform:none;border-radius:24px}
+  .corner.tr{right:-8px;top:-24px}
+  .corner.bl{left:-8px;bottom:-22px}
+  .beam{width:260px}
+  .stage{padding-block:40px 112px}
+}
+
 @media (max-width:420px){
   .card{padding:44px 18px 50px}
   .corner{width:60px;height:60px}
@@ -1310,9 +1338,10 @@ button{position:relative;overflow:hidden}
     const I='#3F3346',fur='#F2B57C',dk='#C97A3E';
     return `<svg viewBox="0 0 160 120" aria-hidden="true"><ellipse cx="80" cy="114" rx="52" ry="5" fill="${I}" opacity=".15"/>
       <g class="tail"><path d="M40 64 Q14 60 16 34 Q17 22 28 24" fill="none" stroke="${I}" stroke-width="13" stroke-linecap="round"/><path d="M40 64 Q14 60 16 34 Q17 22 28 24" fill="none" stroke="${fur}" stroke-width="8" stroke-linecap="round"/><path d="M17 40 l6 1 M17 31 l6 3" stroke="${dk}" stroke-width="3" stroke-linecap="round"/></g>
-      <g stroke="${I}" stroke-width="2.5"><rect x="42" y="76" width="13" height="32" rx="6.5" fill="${fur}"/><rect x="58" y="78" width="13" height="30" rx="6.5" fill="${dk}"/>
-        <rect x="94" y="78" width="13" height="30" rx="6.5" fill="${dk}"/><rect x="108" y="76" width="13" height="32" rx="6.5" fill="${fur}"/></g>
-      <g fill="#FFF3E6" stroke="${I}" stroke-width="2"><ellipse cx="48.5" cy="108" rx="8" ry="4.5"/><ellipse cx="114.5" cy="108" rx="8" ry="4.5"/></g>
+      <g stroke="${I}" stroke-width="2.5">
+        <g class="cl cl2"><rect x="58" y="78" width="13" height="30" rx="6.5" fill="${dk}"/></g><g class="cl cl3"><rect x="94" y="78" width="13" height="30" rx="6.5" fill="${dk}"/></g>
+        <g class="cl cl1"><rect x="42" y="76" width="13" height="32" rx="6.5" fill="${fur}"/><ellipse cx="48.5" cy="108" rx="8" ry="4.5" fill="#FFF3E6" stroke-width="2"/></g>
+        <g class="cl cl4"><rect x="108" y="76" width="13" height="32" rx="6.5" fill="${fur}"/><ellipse cx="114.5" cy="108" rx="8" ry="4.5" fill="#FFF3E6" stroke-width="2"/></g></g>
       <ellipse cx="80" cy="68" rx="44" ry="24" fill="${fur}" stroke="${I}" stroke-width="3"/>
       <ellipse cx="86" cy="80" rx="26" ry="9" fill="#FFF3E6"/>
       <path d="M58 46 q5 8 0 14 M72 44 q5 8 0 15 M86 45 q5 8 0 14" fill="none" stroke="${dk}" stroke-width="4" stroke-linecap="round"/>
@@ -1433,10 +1462,10 @@ button{position:relative;overflow:hidden}
     while(true){
       const W=innerWidth,leftToRight=catX<W/2,end=leftToRight?W+100:-120,mid=W*(.3+Math.random()*.4);
       if(sleeping)return;
-      await catWalk(mid,Math.abs(mid-catX)*14);
+      await catWalk(mid,Math.abs(mid-catX)*28);
       cat.classList.add('sitting');await wait(2500+Math.random()*2500);
       if(sleeping)return;
-      await catWalk(end,Math.abs(end-mid)*14);
+      await catWalk(end,Math.abs(end-mid)*28);
       await wait(16000+Math.random()*16000);
     }
   }
@@ -1480,12 +1509,12 @@ button{position:relative;overflow:hidden}
   /* ---------- scenes ---------- */
   const scenes=[...document.querySelectorAll('.scene')];
   const dots=$('dots');
-  scenes.forEach(()=>{const i=document.createElement('i');i.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 21C3 15 1 9 5 6c3-2.5 6-.5 7 2 1-2.5 4-4.5 7-2 4 3 2 9-7 15z"/></svg>';dots.appendChild(i)});
+  dots.innerHTML='<span class="pfill"></span><svg class="pheart" viewBox="0 0 24 24"><path d="M12 21C3 15 1 9 5 6c3-2.5 6-.5 7 2 1-2.5 4-4.5 7-2 4 3 2 9-7 15z"/></svg>';
   let cur=0;
   function go(n){
     if(n<0||n>=scenes.length)return;
     scenes.forEach((s,i)=>s.setAttribute('aria-hidden',i===n?'false':'true'));
-    [...dots.children].forEach((d,i)=>{d.classList.toggle('on',i===n);d.classList.toggle('done',i<n)});
+    dots.style.setProperty('--prog',(n/(scenes.length-1)*100)+'%');
     cur=n;
     stage(n,scenes.length);
     if(scenes[n].id==='vroo')sizeScratch();
