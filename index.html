@@ -721,6 +721,29 @@ button{position:relative;overflow:hidden}
 .cat.has-lottie.walking svg{animation:none}
 @media (min-width:900px){.cat.has-lottie{width:92px}}
 
+/* ---------- 3 · phone wallpaper ---------- */
+.phone .ph-wall{opacity:0;transition:opacity 1.4s ease .3s}
+.phone.full.haswall .ph-wall{opacity:1}
+.phone .clock{font:700 20px var(--f-body);fill:#fff;opacity:0;transition:opacity 1s ease 1.2s;paint-order:stroke;stroke:rgba(0,0,0,.25);stroke-width:2px}
+.phone.full.haswall .clock{opacity:1}
+.phone.full.haswall .stat{opacity:0}
+.phone .stat{transition:opacity .5s}
+
+/* ---------- D · characters react ---------- */
+.p.waveback .arm{animation:wave 1.1s ease-in-out 3}
+.p .eyes{transition:translate .5s ease}
+.ground.lookup .p .eyes{translate:0 -3.5px}
+.ground.lookup .walker svg{rotate:-2deg}
+.ground.lookup .girl-w svg{rotate:2deg}
+.walker svg{transition:rotate .5s ease}
+
+/* ---------- E · chapter weather ---------- */
+.wx{position:absolute;inset:0;pointer-events:none}
+.wx .pt{position:absolute;top:-30px;animation:wxfall var(--fd) linear infinite;animation-delay:var(--dl);opacity:0;transition:opacity 2.5s}
+@keyframes wxfall{from{transform:translate(0,0) rotate(0)}to{transform:translate(var(--dx),110vh) rotate(var(--rt))}}
+.world[data-p="0"] .wx .petal{opacity:.85}
+.world[data-p="1"] .wx .leaf,.world[data-p="2"] .wx .leaf.few{opacity:.85}
+
 html,body{overflow-x:hidden}
 .stage{overflow-x:clip}
 .card{box-sizing:border-box}
@@ -797,6 +820,7 @@ html,body{overflow-x:hidden}
     <pattern id="kDots" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.6" fill="#FFF3F6" opacity=".8"/><circle cx="9" cy="9" r="1.6" fill="#FFF3F6" opacity=".8"/></pattern>
     <radialGradient id="kBlush"><stop offset="0" stop-color="#F48FA6" stop-opacity=".75"/><stop offset="1" stop-color="#F48FA6" stop-opacity="0"/></radialGradient>
     <linearGradient id="kFur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6C48E"/><stop offset="1" stop-color="#E3A066"/></linearGradient>
+    <clipPath id="phScr"><rect x="19" y="23" width="82" height="148" rx="9"/></clipPath>
     <symbol id="s-heart" viewBox="0 0 24 24">
       <path d="M12 21 C3 15 1 9 5 6 C8 3.5 11 5.5 12 8 C13 5.5 16 3.5 19 6 C23 9 21 15 12 21 Z" fill="#D08E9C" stroke="#3F3346" stroke-width="1.6" stroke-linejoin="round"/></symbol>
   </defs>
@@ -818,6 +842,7 @@ html,body{overflow-x:hidden}
   </svg>
   <svg class="tree" viewBox="0 0 120 150"><rect x="54" y="88" width="12" height="60" rx="5" class="trunk"/><circle cx="60" cy="64" r="40" class="leaf1"/><circle cx="36" cy="82" r="28" class="leaf2"/><circle cx="86" cy="82" r="28" class="leaf3"/><circle cx="48" cy="48" r="12" class="shine"/></svg>
   <div class="lamp"><div class="lamp-glow"></div><svg viewBox="0 0 40 140"><path d="M10 26 H30 L26 12 H14 Z" fill="#2B2B3E"/><circle cx="20" cy="20" r="6" class="bulb"/><rect x="18" y="26" width="4" height="110" fill="#2B2B3E"/><rect x="12" y="132" width="16" height="8" rx="2" fill="#2B2B3E"/></svg></div>
+  <div class="wx" id="wx"></div>
   <div class="flies" id="flies"></div>
   <div class="grain"></div>
   <div class="film"></div>
@@ -1004,7 +1029,7 @@ html,body{overflow-x:hidden}
       </section>
 
       <!-- 10 · runaway no -->
-      <section data-p="1" data-prop="camera" class="scene" data-i="10" aria-hidden="true" id="c2q">
+      <section data-p="1" data-prop="camera" class="scene" data-i="10" aria-hidden="true" id="c2q" data-look="1">
         <span class="stamp">question 5</span>
         <h2>Be honest… <em>do you miss Me & our fights?</em></h2>
         <div class="arena" id="arena">
@@ -1035,10 +1060,12 @@ html,body{overflow-x:hidden}
           <rect x="18" y="22" width="84" height="150" rx="10" fill="#FFFCF9" stroke="#3F3346" stroke-width="2.5"/>
           <rect x="48" y="11" width="24" height="5" rx="2.5" fill="#3F3346"/>
           <circle cx="60" cy="184" r="6" fill="#FFFCF9" stroke="#3F3346" stroke-width="2.5"/>
+          <g class="wallslot"></g>
           <g class="sig"><rect class="b" x="26" y="38" width="5" height="4" rx="1"/><rect class="b" x="33" y="35" width="5" height="7" rx="1"/>
             <rect class="b" x="40" y="32" width="5" height="10" rx="1"/><rect class="b" x="47" y="29" width="5" height="13" rx="1"/><rect class="b" x="54" y="26" width="5" height="16" rx="1"/></g>
+          <image class="ph-wall" x="19" y="23" width="82" height="148" preserveAspectRatio="xMidYMid slice" clip-path="url(#phScr)"/>
+          <text class="clock" x="60" y="62" text-anchor="middle">11:11</text>
           <text class="stat" x="60" y="104" text-anchor="middle">No signal</text>
-          <path class="ph-heart" d="M60 150 C44 139 40 129 47 123 C52 119 58 122 60 127 C62 122 68 119 73 123 C80 129 76 139 60 150 Z" fill="#D08E9C" stroke="#3F3346" stroke-width="2.5" stroke-linejoin="round"/>
         </svg>
         <h1>The <em>quiet</em> part</h1>
         <p>The network between us has been a bit weak lately. Let's fix that. Music on, if you want.</p>
@@ -1055,10 +1082,12 @@ html,body{overflow-x:hidden}
           <rect x="18" y="22" width="84" height="150" rx="10" fill="#FFFCF9" stroke="#3F3346" stroke-width="2.5"/>
           <rect x="48" y="11" width="24" height="5" rx="2.5" fill="#3F3346"/>
           <circle cx="60" cy="184" r="6" fill="#FFFCF9" stroke="#3F3346" stroke-width="2.5"/>
+          <g class="wallslot"></g>
           <g class="sig"><rect class="b" x="26" y="38" width="5" height="4" rx="1"/><rect class="b" x="33" y="35" width="5" height="7" rx="1"/>
             <rect class="b" x="40" y="32" width="5" height="10" rx="1"/><rect class="b" x="47" y="29" width="5" height="13" rx="1"/><rect class="b" x="54" y="26" width="5" height="16" rx="1"/></g>
+          <image class="ph-wall" x="19" y="23" width="82" height="148" preserveAspectRatio="xMidYMid slice" clip-path="url(#phScr)"/>
+          <text class="clock" x="60" y="62" text-anchor="middle">11:11</text>
           <text class="stat" x="60" y="104" text-anchor="middle">No signal</text>
-          <path class="ph-heart" d="M60 150 C44 139 40 129 47 123 C52 119 58 122 60 127 C62 122 68 119 73 123 C80 129 76 139 60 150 Z" fill="#D08E9C" stroke="#3F3346" stroke-width="2.5" stroke-linejoin="round"/>
         </svg>
         <div class="lines" id="lineBox" aria-live="polite"></div>
         <button class="next" id="lineTap">Tap to boost the signal</button>
@@ -1211,7 +1240,7 @@ html,body{overflow-x:hidden}
       </section>
 
       <!-- honest question -->
-      <section class="scene" data-p="5" data-prop="none" aria-hidden="true" id="sHonest">
+      <section class="scene" data-p="5" data-prop="none" aria-hidden="true" id="sHonest" data-look="1">
         <span class="stamp">one honest question</span>
         <h2>When you went quiet on me… was it because you <em>wanted to,</em> or because you <em>had to?</em></h2>
         <div class="honest" id="honestOpts">
@@ -1224,7 +1253,7 @@ html,body{overflow-x:hidden}
       </section>
 
       <!-- did you miss it -->
-      <section class="scene" data-p="5" data-prop="none" aria-hidden="true" id="sMiss2">
+      <section class="scene" data-p="5" data-prop="none" aria-hidden="true" id="sMiss2" data-look="1">
         <span class="stamp">and one more</span>
         <h2>On the days we didn't talk… <em>did you miss it too?</em></h2>
         <div class="honest" id="miss2Opts">
@@ -1249,7 +1278,7 @@ html,body{overflow-x:hidden}
       </section>
 
       <!-- last question -->
-      <section class="scene" data-p="5" data-prop="none" aria-hidden="true" id="sChance">
+      <section class="scene" data-p="5" data-prop="none" aria-hidden="true" id="sChance" data-look="1">
         <span class="stamp">the last question</span>
         <h2>If one day it feels right… <em>will you let me try?</em></h2>
         <div class="btns" id="chanceBtns">
@@ -2174,6 +2203,50 @@ html,body{overflow-x:hidden}
     sc.src='https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js';
     sc.onload=go;document.head.appendChild(sc);
   }).catch(()=>{});
+
+  /* ---------- 3 · wallpaper uses photo1 ---------- */
+  (function(){
+    const exts=['jpg','jpeg','png','webp','JPG','JPEG','PNG'];let k=0;
+    (function next(){
+      if(k>=exts.length)return;
+      const src=`assets/photos/photo1.${exts[k++]}`,im=new Image();
+      im.onload=()=>document.querySelectorAll('.phone').forEach(ph=>{
+        const w=ph.querySelector('.ph-wall');w.setAttribute('href',src);ph.classList.add('haswall');
+        ph.querySelector('.wallslot').appendChild(w);
+      });
+      im.onerror=next;im.src=src;
+    })();
+  })();
+
+  /* ---------- C · phone vibration on wrong moves ---------- */
+  function buzz(p){try{if(navigator.vibrate)navigator.vibrate(p||[35,30,35])}catch(e){}}
+  document.querySelector('.card').addEventListener('animationstart',e=>{if(e.animationName==='shake')buzz()});
+  document.addEventListener('animationstart',e=>{if(e.animationName==='sbub')buzz(25)});
+
+  /* ---------- D · she waves back, both look up at big questions ---------- */
+  function waveBack(){
+    const g=girlSvg;g.classList.remove('waveback');void g.getBoundingClientRect();
+    setTimeout(()=>{g.classList.add('waveback');setTimeout(()=>g.classList.remove('waveback'),3400)},900);
+  }
+  boyW.addEventListener('click',waveBack);
+  setTimeout(waveBack,2500);
+  const groundEl=$('ground');
+  new MutationObserver(()=>{
+    const sc=[...document.querySelectorAll('.scene')].find(x=>x.getAttribute('aria-hidden')==='false');
+    groundEl.classList.toggle('lookup',!!(sc&&sc.dataset.look));
+  }).observe(document.querySelector('.scenes'),{subtree:true,attributes:true,attributeFilter:['aria-hidden']});
+
+  /* ---------- E · petals in the morning, leaves in the afternoon ---------- */
+  (function(){
+    const wx=$('wx');
+    const petal=c=>`<svg width="14" height="14" viewBox="0 0 14 14"><path d="M7 1 C12 4 12 10 7 13 C2 10 2 4 7 1Z" fill="${c}"/></svg>`;
+    const leaf=c=>`<svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 16 C2 6 8 2 16 2 C16 10 12 16 2 16Z" fill="${c}"/><path d="M2 16 L12 6" stroke="#6B4E3A" stroke-width="1"/></svg>`;
+    const add=(cls,html,n,slow)=>{for(let i=0;i<n;i++){const e=document.createElement('i');e.className='pt '+cls+(i<3?' few':'');e.innerHTML=html(i);
+      e.style.cssText=`left:${Math.random()*96}%;--fd:${(slow?11:8)+Math.random()*6}s;--dl:${-Math.random()*14}s;--dx:${Math.random()*120-60}px;--rt:${Math.random()*540-270}deg`;wx.appendChild(e)}};
+    const n=innerWidth<500?10:18;
+    add('petal',i=>petal(['#F7B3C0','#FFFFFF','#F0C4CE'][i%3]),n,false);
+    add('leaf',i=>leaf(['#D9A15B','#C97A3E','#9DB8A6'][i%3]),Math.round(n*.6),true);
+  })();
 })();
 </script>
 
