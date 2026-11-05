@@ -744,6 +744,28 @@ button{position:relative;overflow:hidden}
 .world[data-p="0"] .wx .petal{opacity:.85}
 .world[data-p="1"] .wx .leaf,.world[data-p="2"] .wx .leaf.few{opacity:.85}
 
+/* ---------- chapter trail (replaces the bar) ---------- */
+.dots{left:0;right:0;bottom:16px;height:auto;background:none;border-radius:0;display:flex;flex-direction:column;align-items:center;gap:4px;transform:none}
+.dots .chtrail{display:flex;align-items:center}
+.dots .ck{display:grid;place-items:center;width:16px;height:16px;border-radius:50%;background:var(--line);transition:background .5s,transform .5s}
+.dots .ck svg{width:9px;height:9px;opacity:0;transition:opacity .4s}
+.dots .ck path{fill:#fff}
+.dots .ck.done{background:#E8BFC8}
+.dots .ck.now{background:var(--rose);transform:scale(1.35);box-shadow:0 0 0 4px rgba(208,142,156,.18)}
+.dots .ck.now svg,.dots .ck.done svg{opacity:1}
+.dots .ck.now svg{animation:heartbeat 1.4s ease-in-out infinite}
+.dots .ln{width:clamp(14px,5vw,30px);height:2px;margin:0 3px;border-radius:2px;background:repeating-linear-gradient(90deg,var(--line) 0 4px,transparent 4px 7px);transition:background .5s}
+.dots .ln.done{background:#E8BFC8}
+.dots .chl{font-family:var(--f-hand);font-size:17px;color:var(--ink-soft);line-height:1;min-height:17px}
+/* donut moves to the top-left corner so nothing covers the trail */
+.corner.bl{left:-22px;top:-24px;bottom:auto}
+.card{padding-bottom:84px!important}
+.dots{width:auto!important}
+.dots .chtrail{flex:none}
+.dots .ck{flex:none;width:16px!important;height:16px!important;border-radius:50%!important}
+.dots .ln{flex:none;display:block}
+@media (max-width:420px){.corner.bl{left:-8px;top:-20px;bottom:auto}}
+
 html,body{overflow-x:hidden}
 .stage{overflow-x:clip}
 .card{box-sizing:border-box}
@@ -1543,12 +1565,16 @@ html,body{overflow-x:hidden}
   /* ---------- scenes ---------- */
   const scenes=[...document.querySelectorAll('.scene')];
   const dots=$('dots');
-  dots.innerHTML='<span class="pfill"></span><svg class="pheart" viewBox="0 0 24 24"><path d="M12 21C3 15 1 9 5 6c3-2.5 6-.5 7 2 1-2.5 4-4.5 7-2 4 3 2 9-7 15z"/></svg>';
+  const chOf=[];{let c=1;scenes.forEach(sc=>{chOf.push(c);const st=sc.querySelector('.stamp');if(st&&/^end of chapter/i.test(st.textContent.trim()))c++})}
+  const CH=chOf[chOf.length-1];
+  dots.innerHTML='<div class="chtrail">'+Array.from({length:CH},(_,i)=>'<i class="ck"><svg viewBox="0 0 24 24"><path d="M12 21C3 15 1 9 5 6c3-2.5 6-.5 7 2 1-2.5 4-4.5 7-2 4 3 2 9-7 15z"/></svg></i>').join('<b class="ln"></b>')+'</div><span class="chl" id="chl"></span>';
   let cur=0;
   function go(n){
     if(n<0||n>=scenes.length)return;
     scenes.forEach((s,i)=>s.setAttribute('aria-hidden',i===n?'false':'true'));
-    dots.style.setProperty('--prog',(n/(scenes.length-1)*100)+'%');
+    {const c=chOf[n];dots.querySelectorAll('.ck').forEach((k,i)=>{k.classList.toggle('done',i<c-1);k.classList.toggle('now',i===c-1)});
+     dots.querySelectorAll('.ln').forEach((l,i)=>l.classList.toggle('done',i<c-1));
+     $('chl').textContent=n===0?'':(c===CH?'last chapter':'chapter '+c+' of '+CH);}
     cur=n;
     stage(n,scenes.length);
     if(scenes[n].id==='vroo')sizeScratch();
