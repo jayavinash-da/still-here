@@ -763,6 +763,8 @@ button{position:relative;overflow:hidden}
 /* photos always fill their frame, centred, never spilling */
 .pol .ph,.cd .ph{position:relative}
 .cd .ph{position:absolute}
+.ph img.phbg{object-fit:cover!important;filter:blur(12px) brightness(.85) saturate(1.1);transform:scale(1.2)}
+.ph img.phfit{object-fit:contain!important;object-position:center!important}
 .ph img{position:absolute!important;inset:0;width:100%!important;height:100%!important;max-width:none;object-fit:cover;object-position:center 35%;display:block}
 .dots{width:auto!important}
 .dots .chtrail{flex:none}
@@ -2208,7 +2210,13 @@ html,body{overflow-x:hidden}
       const src=`assets/photos/photo${n}.${exts[k++]}`,im=new Image();
       im.onload=()=>{
         document.querySelectorAll('.ph').forEach(ph=>{
-          if(ph.dataset.photo==String(n)){ph.textContent='';const i=document.createElement('img');i.src=src;i.alt='';ph.appendChild(i)}
+          if(ph.dataset.photo==String(n)){
+            ph.textContent='';
+            const r=ph.getBoundingClientRect(),fr=(r.width&&r.height)?r.width/r.height:(ph.closest('.cd')?1:.85);
+            const pr=im.naturalWidth/im.naturalHeight,odd=Math.max(pr/fr,fr/pr)>1.25;
+            if(odd){const bg=document.createElement('img');bg.src=src;bg.alt='';bg.className='phbg';ph.appendChild(bg)}
+            const i=document.createElement('img');i.src=src;i.alt='';if(odd)i.className='phfit';ph.appendChild(i);
+          }
         });
       };
       im.onerror=next;im.src=src;
