@@ -760,6 +760,10 @@ button{position:relative;overflow:hidden}
 /* donut moves to the top-left corner so nothing covers the trail */
 .corner.bl{left:-22px;top:-24px;bottom:auto}
 .card{padding-bottom:84px!important}
+/* photos always fill their frame, centred, never spilling */
+.pol .ph,.cd .ph{position:relative}
+.cd .ph{position:absolute}
+.ph img{position:absolute!important;inset:0;width:100%!important;height:100%!important;max-width:none;object-fit:cover;object-position:center 35%;display:block}
 .dots{width:auto!important}
 .dots .chtrail{flex:none}
 .dots .ck{flex:none;width:16px!important;height:16px!important;border-radius:50%!important}
