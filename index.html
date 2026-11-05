@@ -716,6 +716,11 @@ button{position:relative;overflow:hidden}
 .cat .zzz{scale:1 1}
 .cat.flip .zzz{scale:-1 1}
 
+.cat.has-lottie{width:72px}
+.cat .lottie-cat{width:100%;aspect-ratio:1;pointer-events:none}
+.cat.has-lottie.walking svg{animation:none}
+@media (min-width:900px){.cat.has-lottie{width:92px}}
+
 html,body{overflow-x:hidden}
 .stage{overflow-x:clip}
 .card{box-sizing:border-box}
@@ -2152,6 +2157,23 @@ html,body{overflow-x:hidden}
   }
   document.querySelectorAll('.ph').forEach(ph=>{const m=ph.textContent.trim().match(/^photo (\d)$/);if(m)ph.dataset.photo=m[1]});
   [1,2,3].forEach(loadPhoto);
+
+  /* ---------- Lottie cat from assets/cat.json (falls back to the drawn cat) ---------- */
+  fetch('assets/cat.json').then(r=>r.ok?r.json():null).then(data=>{
+    if(!data)return;
+    const go=()=>{
+      try{
+        const box=document.createElement('div');box.className='lottie-cat';
+        cat.querySelector('svg').style.display='none';cat.prepend(box);
+        cat.classList.add('has-lottie');
+        window.lottie.loadAnimation({container:box,renderer:'svg',loop:true,autoplay:true,animationData:data});
+      }catch(e){}
+    };
+    if(window.lottie)return go();
+    const sc=document.createElement('script');
+    sc.src='https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js';
+    sc.onload=go;document.head.appendChild(sc);
+  }).catch(()=>{});
 })();
 </script>
 
